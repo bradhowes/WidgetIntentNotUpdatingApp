@@ -14,6 +14,9 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var phase
     @Query private var items: [Item]
 
+    let timer = Timer.publish(every: 15, on: .main, in: .common)
+        .autoconnect()
+
     var body: some View {
         List {
             ForEach(items) { item in
@@ -40,6 +43,8 @@ struct ContentView: View {
                 WidgetCenter.shared.reloadAllTimelines()
             }
         }
+        .onReceive(timer) { _ in
+            items.forEach { $0.completed = $0.completed }
+        }
     }
-
 }
